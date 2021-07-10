@@ -1,0 +1,547 @@
+<!--
+
+MODEL: Univewrsal Robots UR5 + Robotiq S Model 3 Finger Gripper
+AUTHOR: Andrea Franceschetti @IASLAB Research Group
+UNIVERSITY: University of Padua
+DEPARTMENT: Departement of Information Engineering DEI
+Control Engineering / Automation Engineering
+
+-->
+
+
+<!--Link  MuJoCo modeling: http://www.mujoco.org/book/modeling.html-->
+
+<mujoco model="ur5gripper">
+    <compiler angle="radian"
+              inertiafromgeom="true"
+              texturedir="textures/"
+              meshdir="mesh/visual/"/>
+    <option timestep="2e-3"
+            iterations="100"
+            tolerance="1e-10"
+            impratio="10"/>
+    <!-- <size njmax="600" nconmax="150" nstack="300000"/> -->
+
+    <default>
+        <site rgba="0.8 0.6 0.7 0.3" type="ellipsoid" group="3"/>
+        <geom contype='1' conaffinity='1' condim='4'  margin="1e-3" solref=".01 1" solimp=".99 .99 .01" />
+        <joint armature="0.01" damping=".1"/>
+        <default class="UR5">
+            <joint damping='10'/>
+        </default>
+        <default class="UR5e">
+            <joint damping='10'/>
+        </default>
+        <default class="robot0:asset_class">
+            <geom friction="1 0.005 0.001" condim="4" margin="0.0005" contype="1" conaffinity="1"></geom>
+            <joint limited="true" damping="0.1" armature="0.001" margin="0.01" frictionloss="0.001"></joint>
+            <!-- <joint limited="true"  ></joint> -->
+            <site size="0.005" rgba="0.4 0.9 0.4 1"></site>
+            <general ctrllimited="true" forcelimited="true"></general>
+        </default>
+        <default class="robot0:tendon">
+            <site type="sphere" size="0.001 0.001 0.001" pos="0 0 0" rgba="0.8 0.8 0.8 1" group="5"></site>
+        </default>
+        <default class="robot0:D_Touch">
+            <site type="box" size="0.01 0.005 0.013" pos="0.001 -0.001 0.018" rgba="0.8 0.8 0.8 0.15" group="4"></site>
+        </default>
+        <default class="robot0:DC_Hand">
+            <!-- <geom material="robot0:MatColl" contype="1" conaffinity="0" group="4"></geom> -->
+            <geom contype="1" conaffinity="0" group="4"></geom>
+        </default>
+        <default class="robot0:D_Vizual">
+            <!-- <geom material="robot0:MatViz" contype="0" conaffinity="0" group="1" type="mesh" rgba="0 0 0 1"></geom> -->
+            <geom contype="0" conaffinity="0" group="1" type="mesh" rgba="0 0 0 1"></geom>
+
+        </default>
+        <default class="robot0:free">
+            <joint type="free" damping="0" armature="0" limited="false"></joint>
+        </default>
+
+
+    </default>
+
+    <visual>
+        <map fogstart="3" fogend="5" znear="0.05"/>
+        <quality shadowsize="2048"/>
+        <scale framelength="0.1"
+               framewidth="0.005"
+               contactwidth="0.1"
+               contactheight="0.005"
+               forcewidth="0.01"
+               />
+    </visual>
+
+    <!--Assets-->
+    <asset>
+        <!--Meshes-->
+        <mesh name="base"           file="base.stl"     />
+        <mesh name="shoulder"       file="shoulder.stl" />
+        <mesh name="upperarm"       file="upperarm.stl" />
+        <mesh name="forearm"        file="forearm.stl"  />
+        <mesh name="wrist1"         file="wrist1.stl"   />
+        <mesh name="wrist2"         file="wrist2.stl"   />
+        <mesh name="wrist3"         file="wrist3.stl"   />
+        <mesh name="gripperpalm"    file="palm.STL"     />
+        <mesh name="link_0"         file="link_0.STL"   />
+        <mesh name="link_1"         file="link_1.STL"   />
+        <mesh name="link_2"         file="link_2.STL"   />
+        <mesh name="link_3"         file="link_3.STL"   />
+        <mesh file="handbase.STL" name="robot0:palm" smoothnormal="true" />
+        <mesh file="Thumb1.STL" name="robot0:th3" smoothnormal="true" />
+        <mesh file="Thumb2.STL" name="robot0:th2" smoothnormal="true" />
+        <mesh file="Thumb3.STL" name="robot0:th1" smoothnormal="true" />
+        <mesh file="Index1.STL" name="robot0:ff3" smoothnormal="true" />
+        <mesh file="Index2.STL" name="robot0:ff2" smoothnormal="true" />
+        <mesh file="Index3.STL" name="robot0:ff1" smoothnormal="true" />
+        <mesh file="Middle1.STL" name="robot0:mf3" smoothnormal="true" />
+        <mesh file="Middle2.STL" name="robot0:mf2" smoothnormal="true" />
+        <mesh file="Middle3.STL" name="robot0:mf1" smoothnormal="true" />
+        <mesh file="Ring1.STL" name="robot0:rf3" smoothnormal="true" />
+        <mesh file="Ring2.STL" name="robot0:rf2" smoothnormal="true" />
+        <mesh file="Ring3.STL" name="robot0:rf1" smoothnormal="true" />
+        <mesh file="Little1.STL" name="robot0:lf3" smoothnormal="true" />
+        <mesh file="Little2.STL" name="robot0:lf2" smoothnormal="true" />
+        <mesh file="Little3.STL" name="robot0:lf1" smoothnormal="true" />
+
+        <mesh name="robotiq_85_base_link_coarse" file="robotiq_85_base_link_coarse.STL" />
+        <mesh name="inner_knuckle_coarse" file="inner_knuckle_coarse.STL" />
+        <mesh name="inner_finger_coarse" file="inner_finger_coarse.STL" />
+        <mesh name="outer_knuckle_coarse" file="outer_knuckle_coarse.STL" />
+        <mesh name="outer_finger_coarse" file="outer_finger_coarse.STL" />
+
+        <!--Textures-->
+        <texture name="ur5_tex"     type="2d"       builtin="flat" height="32" width="32" rgb1="0.45 0.45 0.45" />
+        <texture name="gripper_tex" type="2d"       builtin="flat" height="32" width="32" rgb1="0.45 0.45 0.45" rgb2="0 0 0"/>
+        <texture name="bench_tex"   type="2d"       builtin="flat" height="32" width="32" rgb1="0.7 0.7 0.7" />
+        <texture name="sky_tex"     type="skybox"   builtin="gradient" width="100" height="100" rgb1="1 1 1" rgb2="0.3 0.3 0.8" />
+        <texture name="texgeom"     type="cube"     builtin="flat" mark="cross" width="127" height="1278" rgb1="0.8 0.6 0.4" rgb2="0.8 0.6 0.4" markrgb="1 1 1" random="0.01" />
+        <texture name="floor_tex"   type="2d"        builtin="checker" rgb1=".2 .3 .4" rgb2=".1 .2 .3" width="100" height="100" />
+        <texture name="wood"        type="cube"     file="wood2.png"/>
+        <texture name="metal"        type="cube"     file="metal2.png"/>
+        <!--Materials-->
+        <material name="ur5_mat"        texture="ur5_tex"   shininess="0.9" specular="0.75" reflectance="0.3"/>
+        <material name="gripper_mat"    texture="gripper_tex"   shininess="0.9" specular="0.75" reflectance="0.4"/>
+        <material name='floor_mat'      texture="floor_tex"  shininess="0.8" texrepeat="10 10" specular="0.7"  reflectance="0.5" />
+        <material name='geom'           texture="texgeom"   texuniform="true" />
+        <material name="bench_mat"      texture="metal"   shininess="0.1" specular="0.5" reflectance="0.2"/>
+        <material name="tablecube"      texture="wood" rgba=".8 .8 .8 1"/>
+    </asset>
+
+    <!--Contacts-->
+    <contact>
+        <exclude body1="box_link" body2="base_link"/>
+        <exclude body1="base_link" body2="shoulder_link"/>
+        <exclude body1="shoulder_link" body2="upper_arm_link"/>
+        <exclude body1="upper_arm_link" body2="forearm_link"/>
+        <exclude body1="forearm_link" body2="wrist_1_link"/>
+        <exclude body1="wrist_1_link" body2="wrist_2_link"/>
+        <exclude body1="wrist_2_link" body2="wrist_3_link"/>
+        <exclude body1="ee_link" body2="wrist_3_link"/>
+    </contact>
+
+
+    <!--MODEL DESCRIPTION-->
+    <worldbody>
+        <!--Lighting parameters-->
+        <light name="light3" mode="targetbody" target="box_link" directional="true" pos="1 -1 3" />
+        <!-- <light name="light3" mode="targetbody" target="box_link" directional="true" pos="1 1 3" /> -->
+        <!--Camera parameters-->
+        <camera name="main1" mode="fixed" target="ee_link" pos="2 2 2.7" axisangle="2 2 -2 1"/>
+        <camera name="top_down" mode="fixed" target="ee_link" pos="0 -0.6 2.0" axisangle="2 2 2 0"/>
+        <camera name="side" mode="fixed" target="ee_link" pos="0.8 -0.6 1.0" quat="0.5 0.5 0.5 0.5"/>
+        <!--Floor Property-->
+        <geom name='floor' material="floor_mat" pos='0 0 0' size='2.5 2.5 0.1'  type='plane' />
+
+        <body name="pick_box" pos="0.6 0.0 0.0">
+            <geom size=".31 .50 .03" pos ="0.11 0 0.88" type="box" material="bench_mat"/>
+
+            <geom size=".03 .49 .44" pos ="0.45 0.0 0.44" type="box" material="bench_mat"/>
+            <geom size=".03 .49 .44" pos ="-0.23 0.0 0.44" type="box" material="bench_mat"/>
+            <geom size=".37 .03 .44" pos ="0.11 0.52 0.44" type="box" material="bench_mat"/>
+            <geom size=".37 .03 .44" pos ="0.11 -0.52 0.44" type="box" material="bench_mat"/>
+            <inertial pos="0 0 0" mass="1000" diaginertia="0 0 0" />
+        </body>
+
+        <body mocap="true" name="mocap" pos="0.08229997 0.10921554 1.871059">
+        <!-- <body mocap="true" name="mocap" pos="0 0 0"> -->
+            <!-- <geom conaffinity="0" contype="0" pos="0 0 0" rgba="0 0.5 0 0.7" size="0.005 0.005 0.005" type="box"></geom>
+            <geom conaffinity="0" contype="0" pos="1 0 0" rgba="1 0 0 0.1" size="1 0.005 0.005" type="box"></geom>
+            <geom conaffinity="0" contype="0" pos="0 1 0" rgba="0 1 0 0.1" size="0.005 1 0.001" type="box"></geom>
+            <geom conaffinity="0" contype="0" pos="0 0 1" rgba="0 0 1 0.1" size="0.005 0.005 1" type="box"></geom> -->
+        </body>
+
+        <!--Robot UR5-->
+        <body name="box_link" pos="0 0 0.435">
+            <!--<geom size=".3 .2 .435" type="box" material="bench_mat"/>-->
+            <geom size=".29 .19 .03" pos ="0 0 0.4" type="box" material="bench_mat"/>
+            <geom size=".29 .19 .03" pos ="0 0 -0.2" type="box" material="bench_mat"/>
+            <geom size=".04 .04 .435" pos =".26 .16 0" type="box" material="bench_mat"/>
+            <geom size=".04 .04 .435" pos ="-.26 .16 0" type="box" material="bench_mat"/>
+            <geom size=".04 .04 .435" pos =".26 -.16 0" type="box" material="bench_mat"/>
+            <geom size=".04 .04 .435" pos ="-.26 -.16 0" type="box" material="bench_mat"/>
+            <inertial pos="0 0 0" mass="1000" diaginertia="0 0 0" />
+            <body name="base_link" pos="0 0 0.435">
+                <inertial pos="0 0 0" quat="0.5 0.5 -0.5 0.5" mass="4" diaginertia="0.0072 0.00443333 0.00443333" />
+                <!-- <geom type="cylinder" rgba="1 0 0 1" pos="0.5 0 0" size="0.001 0.5" euler="0 1.57 0" contype="0" conaffinity="0"/>
+                <geom type="cylinder" rgba="0 1 0 1" pos="0 0.5 0" size="0.001 0.5" euler="-1.57 0 0"  contype="0" conaffinity="0"/>
+                <geom type="cylinder" rgba="0 0 1 1" pos="0 0 0.5" size="0.001 0.5" euler="0 0 0"  contype="0" conaffinity="0"/>            -->
+                <geom type="mesh"  mesh="base" material="ur5_mat"/> <!-- 17 -->
+                <body name="shoulder_link" pos="0 0 0.089159">
+                    <inertial pos="0 0 0" mass="3.7" diaginertia="0.0102675 0.0102675 0.00666" />
+                    <joint name="shoulder_pan_joint" class="UR5" pos="0 0 0" axis="0 0 1" limited="true" range="-3.14159 3.14159" />
+                    <geom type="mesh"  mesh="shoulder" material="ur5_mat"/>
+                    <!-- <body name="upper_arm_link" pos="0 0.13585 0" quat="0.707107 0 0.707107 0"> -->
+                    <body name="upper_arm_link" pos="0 0.13585 0">
+                        <inertial pos="0 0 0.28" mass="8.393" diaginertia="0.226891 0.226891 0.0151074" />
+                        <joint name="shoulder_lift_joint" class="UR5" pos="0 0 0" axis="0 1 0" limited="true" range="-3.14159 3.14159" /> <!--Range= -3.14159 3.14159-->
+                        <geom type="mesh"  mesh="upperarm" material="ur5_mat"/>
+                        <body name="forearm_link" pos="0 -0.1197 0.425">
+                            <inertial pos="0 0 0.25" mass="2.275" diaginertia="0.0494433 0.0494433 0.004095" />
+                            <joint name="elbow_joint" class="UR5" pos="0 0 0" axis="0 1 0" limited="true" range="-3.14159 3.14159" />
+                            <geom type="mesh"  mesh="forearm" material="ur5_mat"/>
+                            <body name="wrist_1_link" pos="0 0 0.39225">
+                                <inertial pos="0 0 0" quat="0.5 0.5 -0.5 0.5" mass="1.219" diaginertia="0.21942 0.111173 0.111173" />
+                                <joint name="wrist_1_joint" class="UR5e" pos="0 0 0" axis="0 1 0" limited="true" range="-3.14159 3.14159" />
+                                <geom type="mesh"  mesh="wrist1" material="ur5_mat"/>
+                                <body name="wrist_2_link" pos="0 0.093 0" euler="0 0 -1.57">
+                                    <inertial pos="0 0 0" quat="0.5 0.5 -0.5 0.5" mass="1.219" diaginertia="0.21942 0.111173 0.111173" />
+                                    <joint name="wrist_2_joint" class="UR5e" pos="0 0 0" axis="0 0 1" limited="true" range="-3.14159 3.14159" />
+                                    <geom type="mesh"  mesh="wrist2" material="ur5_mat"/>
+                                    <body name="wrist_3_link" pos="0 0 0.09465">
+                                        <inertial pos="0 0 0" quat="0.5 0.5 -0.5 0.5" mass="0.1879" diaginertia="0.033822 0.0171365 0.0171365" />
+                                        <joint name="wrist_3_joint" class="UR5e" pos="0 0 0" axis="0 1 0" limited="true" range="-3.14159 3.14159" />
+                                        <geom type="mesh"  mesh="wrist3" material="ur5_mat"/> 
+                                        <body name="ee_link" pos="0 0.0823 0">
+                                            <inertial pos="-0.01 0 0" mass="0.001" diaginertia="1.66667e-08 1.66667e-08 1.66667e-08" />
+                                            <geom size="0.005 0.005 0.005" pos="-0.005 0 0" type="box" />
+                                            
+                                            <!-- the part of x-hand -->
+
+                                            <body childclass="robot0:asset_class" name="robot0:palm" pos="0 -0.03 0" euler="-1.57 0 1.57">
+                                                <geom class="robot0:D_Vizual" name="robot0:V_palm" mesh="robot0:palm" pos="0 0 0.028">></geom>
+                                                <geom class="robot0:DC_Hand" name="robot0:C_palm0" type="box" size="0.01 0.048 0.05" pos="0 0 0.11" ></geom>
+                                                <body name="robot0:ffknuckle" pos="-0.000006 0.03485 0.16567">
+                                                    <body name="robot0:ffproximal" pos="0 0 0">
+                                                        <joint name="robot0:FFJ2" type="hinge" pos="0 0 0" axis="0 1 0" range="0 1.571" user="1102"></joint>
+                                                        <geom class="robot0:D_Vizual" name="robot0:V_ffproximal" mesh="robot0:ff3"></geom>
+                                                        <geom class="robot0:DC_Hand" name="robot0:C_ffproximal" type="capsule" pos="0 0 0.023" size="0.0075 0.023"></geom>                         
+                                                        <body name="robot0:ffmiddle" pos="0 0 0.046">
+                                                            <joint name="robot0:FFJ1" type="hinge" pos="0 0 0" axis="0 1 0" range="0 1.571" user="1101"></joint>
+                                                            <geom class="robot0:D_Vizual" name="robot0:V_ffmiddle" mesh="robot0:ff2"></geom>
+                                                            <geom class="robot0:DC_Hand" name="robot0:C_ffmiddle" type="capsule" pos="0 0 0.0115" size="0.007 0.0115"></geom>
+                                                            <body name="robot0:ffdistal" pos="0 0 0.023">
+                                                                <joint name="robot0:FFJ0" type="hinge" pos="0 0 0" axis="0 1 0" range="0 1.571" user="1100"></joint>
+                                                                <geom class="robot0:D_Vizual" name="robot0:V_ffdistal" pos="0 0 0.001" mesh="robot0:ff1"></geom>
+                                                                <geom class="robot0:DC_Hand" name="robot0:C_ffdistal" type="capsule" pos="0 0 0.01" size="0.0055 0.01"></geom>
+                                                                <site class="robot0:D_Touch" name="robot0:Tch_fftip"></site>
+                                                            </body>
+                                                        </body>
+                                                    </body>
+                                                </body>
+                                                <body name="robot0:mfknuckle" pos="-0.0015  0.01135 0.16784">
+                                                    <body name="robot0:mfproximal" pos="0 0 0">
+                                                        <joint name="robot0:MFJ2" type="hinge" pos="0 0 0" axis="0 1 0" range="0 1.571" user="1106"></joint>
+                                                        <geom class="robot0:D_Vizual" name="robot0:V_mfproximal" mesh="robot0:mf3"></geom>
+                                                        <geom class="robot0:DC_Hand" name="robot0:C_mfproximal" type="capsule" pos="0 0 0.025" size="0.0075 0.025"></geom>                          
+                                                        <body name="robot0:mfmiddle" pos="0 0 0.050">
+                                                            <joint name="robot0:MFJ1" type="hinge" pos="0 0 0" axis="0 1 0" range="0 1.571" user="1105"></joint>
+                                                            <geom class="robot0:D_Vizual" name="robot0:V_mfmiddle" mesh="robot0:mf2"></geom>
+                                                            <geom class="robot0:DC_Hand" name="robot0:C_mfmiddle" type="capsule" pos="0 0 0.0125" size="0.007 0.0125"></geom>
+                                                            <body name="robot0:mfdistal" pos="0 0 0.030">
+                                                                <joint name="robot0:MFJ0" type="hinge" pos="0 0 0" axis="0 1 0" range="0 1.571" user="1104"></joint>
+                                                                <geom class="robot0:D_Vizual" name="robot0:V_mfdistal" mesh="robot0:mf1"></geom>
+                                                                <geom class="robot0:DC_Hand" name="robot0:C_mfdistal" type="capsule" pos="0 0 0.009" size="0.0055 0.009"></geom>
+                                                                <site class="robot0:D_Touch" name="robot0:Tch_mftip"></site>
+                                                            </body>
+                                                        </body>
+                                                    </body>
+                                                </body>
+                                                <body name="robot0:rfknuckle" pos="-0.00156 -0.01237 0.16831" euler="0.06 0 0">
+                                                    <body name="robot0:rfproximal" pos="0 0 0">
+                                                        <joint name="robot0:RFJ2" type="hinge" pos="0 0 0" axis="0 1 0" range="0 1.571" user="1110"></joint>
+                                                        <geom class="robot0:D_Vizual" name="robot0:V_rfproximal" mesh="robot0:rf3"></geom>
+                                                        <geom class="robot0:DC_Hand" name="robot0:C_rfproximal" type="capsule" pos="0 0 0.024" size="0.0075 0.024"></geom>                        
+                                                        <body name="robot0:rfmiddle" pos="0 0 0.048">
+                                                            <joint name="robot0:RFJ1" type="hinge" pos="0 0 0" axis="0 1 0" range="0 1.571" user="1109"></joint>
+                                                            <geom class="robot0:D_Vizual" name="robot0:V_rfmiddle" mesh="robot0:rf2"></geom>
+                                                            <geom class="robot0:DC_Hand" name="robot0:C_rfmiddle" type="capsule" pos="0 0 0.0105" size="0.007 0.0105"></geom>
+                                                            <body name="robot0:rfdistal" pos="0 0 0.029">
+                                                                <joint name="robot0:RFJ0" type="hinge" pos="0 0 0" axis="0 1 0" range="0 1.571" user="1108"></joint>
+                                                                <geom class="robot0:D_Vizual" name="robot0:V_rfdistal" mesh="robot0:rf1" pos="0 0 0.001"></geom>
+                                                                <geom class="robot0:DC_Hand" name="robot0:C_rfdistal" type="capsule" pos="0 0 0.01" size="0.0055 0.01"></geom>
+                                                                <site class="robot0:D_Touch" name="robot0:Tch_rftip"></site>
+                                                            </body>
+                                                        </body>
+                                                    </body>
+                                                </body>
+                                                <body name="robot0:lfknuckle" euler="0.11 0 0.06" pos="-0.00002 -0.03659 0.16478">
+                                                    <body name="robot0:lfproximal" pos="0 0 0">
+                                                        <joint name="robot0:LFJ2" type="hinge" pos="0 0 0" axis="0 1 0" range="0 1.571" user="1114"></joint>
+                                                        <geom class="robot0:D_Vizual" name="robot0:V_lfproximal" mesh="robot0:lf3"></geom>
+                                                        <geom class="robot0:DC_Hand" name="robot0:C_lfproximal" type="capsule" pos="0 0 0.02" size="0.0075 0.02"></geom>
+                                                        <body name="robot0:lfmiddle" pos="0 0 0.040">
+                                                            <joint name="robot0:LFJ1" type="hinge" pos="0 0 0" axis="0 1 0" range="0 1.571" user="1113"></joint>
+                                                            <geom class="robot0:D_Vizual" name="robot0:V_lfmiddle" mesh="robot0:lf2"></geom>
+                                                            <geom class="robot0:DC_Hand" name="robot0:C_lfmiddle" type="capsule" pos="0 0 0.0105" size="0.007 0.0105"></geom>								
+                                                            <body name="robot0:lfdistal" pos="0 0 0.021">
+                                                                <joint name="robot0:LFJ0" type="hinge" pos="0 0 0" axis="0 1 0" range="0 1.571" user="1112"></joint>
+                                                                <geom class="robot0:D_Vizual" name="robot0:V_lfdistal" mesh="robot0:lf1" pos="0 0 0.001"></geom>
+                                                                <geom class="robot0:DC_Hand" name="robot0:C_lfdistal" type="capsule" pos="0 0 0.01" size="0.0055 0.01"></geom>
+                                                                <site class="robot0:D_Touch" name="robot0:Tch_lftip"></site>
+                                                            </body>
+                                                        </body>
+                                                    </body>
+                                                </body>
+                                                <body name="robot0:thbase" pos="0.005 0.02 0.0715" >
+                                                    <body name="robot0:thproximal" pos="0 0 0">
+                                                        <joint name="robot0:THJ3" type="hinge" pos="0 0 0" axis="0 0 -1" range="0 4.047" user="1121"></joint>
+                                                        <geom class="robot0:D_Vizual" name="robot0:V_thproximal" mesh="robot0:th3" euler="0 0 0"></geom>
+                                                        <geom class="robot0:DC_Hand" name="robot0:C_thproximal" type="capsule" pos="0 0.035 0.018" size="0.0075 0.012" euler="-0.703 0 0"></geom>
+                                                        <geom class="robot0:DC_Hand" name="robot0:C_thproximal0" type="box" pos="0 0.015 0.00" size="0.0085 0.0065 0.01" euler="1.57 0 0"></geom>
+                                                        <body name="robot0:thhub" pos="0 0.0504 0.03697" axisangle="1 0 0 -0.523">
+                                                            <joint name="robot0:THJ2" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.209" user="1119"></joint>
+                                                            <geom class="robot0:D_Vizual" name="robot0:V_thmiddle" mesh="robot0:th2" euler="0 0 -1.571"></geom>
+                                                            <geom class="robot0:DC_Hand" name="robot0:C_thmiddle" type="capsule" pos="0 0.0 0.0195" size="0.0075 0.0195" euler="0 0 0"></geom>
+                                                            <body name="robot0:thmiddle" pos="0 0 0.039">
+                                                                <joint name="robot0:THJ1" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.524" user="1118"></joint>
+                                                                <geom class="robot0:D_Vizual" name="robot0:V_thdistal" mesh="robot0:th1" euler="0 0 -1.571"></geom>
+                                                                <geom class="robot0:DC_Hand" name="robot0:C_thdistal" type="capsule" pos="0 0 0.011" size="0.007 0.011"></geom>
+                                                                <site class="robot0:D_Touch" name="robot0:Tch_thtip" size="0.009 0.005 0.016" pos="0.00 0 0.015"></site>
+                                                            </body>
+                                                        </body>
+                                                    </body>
+                                                </body>
+                                            </body>
+
+                                            <!-- end of hand-->
+                                        </body>
+                                    </body>
+                                </body>
+                            </body>
+                        </body>
+                    </body>
+                </body>
+            </body>
+            <body name="base" pos="0 0 0" quat="1.7949e-09 0 0 -1">
+                <inertial pos="0 0 0" quat="1.7949e-09 0 0 -1" mass="0" diaginertia="0 0 0" />
+            </body>
+        </body>
+
+ 
+        <body name="box_1" pos="0.6 0.0 2">
+            <joint armature="0" axis="1 0 0" damping="0" limited="true" name="box_1_x" pos="0 0 0" range="-5. 5." stiffness="0" type="slide"/>
+            <joint armature="0" axis="0 1 0" damping="0" limited="true" name="box_1_y" pos="0 0 0" range="-5. 5." stiffness="0" type="slide"/>
+            <joint armature="0" axis="0 0 1" damping="0" limited="true" name="box_1_z" pos="0 0 0" range="-2. 2." stiffness="0" type="slide"/>
+            <joint armature="0" damping="0" name="box_1_rot" pos="0 0 0" stiffness="0" type="ball"/>
+            <geom name="box_1" pos="0 0 0" material="tablecube" size="0.02 0.02 0.02" type="box"/>
+        </body>
+
+        <body name="box_2" pos="0.6 0.0 1.9">
+            <joint armature="0" axis="1 0 0" damping="0" limited="true" name="box_2_x" pos="0 0 0" range="-5. 5." stiffness="0" type="slide" />
+            <joint armature="0" axis="0 1 0" damping="0" limited="true" name="box_2_y" pos="0 0 0" range="-5. 5." stiffness="0" type="slide" />
+            <joint armature="0" axis="0 0 1" damping="0" limited="true" name="box_2_z" pos="0 0 0" range="-2. 2." stiffness="0" type="slide" />
+            <joint armature="0" damping="0" name="box_2_rot" pos="0 0 0" stiffness="0" type="ball"/>
+            <geom name="box_2" pos="0 0 0" rgba="0.0 0.5 0.8 1" size="0.015 0.015 0.015" type="box"/>
+        </body>
+
+        <body name="box_3" pos="0.6 0.0 1.8">
+            <joint armature="0" axis="1 0 0" damping="0" limited="true" name="box_3_x" pos="0 0 0" range="-5. 5." stiffness="0" type="slide"/>
+            <joint armature="0" axis="0 1 0" damping="0" limited="true" name="box_3_y" pos="0 0 0" range="-5. 5." stiffness="0" type="slide"/>
+            <joint armature="0" axis="0 0 1" damping="0" limited="true" name="box_3_z" pos="0 0 0" range="-2. 2." stiffness="0" type="slide"/>
+            <joint armature="0" damping="0" name="box_3_rot" pos="0 0 0" stiffness="0" type="ball"/>
+            <geom name="box_3" pos="0 0 0" rgba="0.8 0.8 0.1 1" size="0.025 0.025 0.025" type="box"/>
+        </body>
+
+        <body name="ball_1" pos="0.6 0.0 1.7">
+            <joint armature="0" axis="1 0 0" damping="0" limited="true" name="ball_1_x" pos="0 0 0" range="-5. 5." stiffness="0" type="slide"/>
+            <joint armature="0" axis="0 1 0" damping="0" limited="true" name="ball_1_y" pos="0 0 0" range="-5. 5." stiffness="0" type="slide"/>
+            <joint armature="0" axis="0 0 1" damping="0" limited="true" name="ball_1_z" pos="0 0 0" range="-2. 2." stiffness="0" type="slide"/>
+            <joint armature="0" damping="0.001" name="ball_1_rot" pos="0 0 0" stiffness="0" type="ball"/>
+            <geom name="ball_1" pos="0 0 0" rgba="0.9 0.2 0.2 1" size=".03" type="sphere"/>
+        </body>
+
+        <body name="ball_2" pos="0.6 0.0 1.6">
+            <joint armature="0" axis="1 0 0" damping="0" limited="true" name="ball_2_x" pos="0 0 0" range="-5. 5." stiffness="0" type="slide"/>
+            <joint armature="0" axis="0 1 0" damping="0" limited="true" name="ball_2_y" pos="0 0 0" range="-5. 5." stiffness="0" type="slide"/>
+            <joint armature="0" axis="0 0 1" damping="0" limited="true" name="ball_2_z" pos="0 0 0" range="-2. 2." stiffness="0" type="slide"/>
+            <joint armature="0" damping="0.001" name="ball_2_rot" pos="0 0 0" stiffness="0" type="ball"/>
+            <geom name="ball_2" pos="0 0 0" material="geom" size=".025" type="sphere"/>
+        </body>
+
+        <body name="ball_3" pos="0.6 0.0 1.5">
+            <joint armature="0" axis="1 0 0" damping="0" limited="true" name="ball_3_x" pos="0 0 0" range="-5. 5." stiffness="0" type="slide"/>
+            <joint armature="0" axis="0 1 0" damping="0" limited="true" name="ball_3_y" pos="0 0 0" range="-5. 5." stiffness="0" type="slide"/>
+            <joint armature="0" axis="0 0 1" damping="0" limited="true" name="ball_3_z" pos="0 0 0" range="-2. 2." stiffness="0" type="slide"/>
+            <joint armature="0" damping="0.001" name="ball_3_rot" pos="0 0 0" stiffness="0" type="ball"/>
+            <geom name="ball_3" pos="0 0 0" rgba="0.2 0.2 0.5 1" size=".02" type="sphere"/>
+        </body>
+
+<!--         <body name="cylinder_1" pos=".15 -.55 1.3">
+            <joint armature="0" axis="1 0 0" damping="0" limited="true" name="cylinder_1_x" pos="0 0 0" range="-5. 5." ref=".1" stiffness="0" type="slide"/>
+            <joint armature="0" axis="0 1 0" damping="0" limited="true" name="cylinder_1_y" pos="0 0 0" range="-5. 5." ref="-.1" stiffness="0" type="slide"/>
+            <joint armature="0" axis="0 0 1" damping="0" limited="true" name="cylinder_1_z" pos="0 0 0" range="-2. 2." ref="-.1" stiffness="0" type="slide"/>
+            <geom name="cylinder_1" pos="0 0 0" material="geom" size=".025 0.05" type="cylinder"/>
+            <inertial pos="0 0 0.01" mass="0.2" diaginertia="0 0 0" />
+        </body>
+ -->
+
+    </worldbody>
+    <equality>
+        <weld body1="mocap" body2="ee_link" solimp="0.9 0.95 0.001" solref="0.02 1"></weld>
+    </equality>
+
+<tendon>
+        <!--<fixed name="robot0:T_FFJ2c" limited="true" range="-0.001 0.001" solreflimit="0.5" solimplimit="0.5">
+            <joint joint="robot0:FFJ2" coef="0.003996"></joint>
+            <joint joint="robot0:FFJ0" coef="-0.005806"></joint>
+        </fixed>-->
+		<fixed name="robot0:T_FFJ2c" limited="true" range="-0.001 0.001" solreflimit="0.15" solimplimit="0.15">
+            <joint joint="robot0:FFJ2" coef="0.003996"></joint>
+            <joint joint="robot0:FFJ0" coef="-0.005806"></joint>
+        </fixed>
+        <fixed name="robot0:T_FFJ2u" limited="true" range="-0.007 0.03" solreflimit="0.15" solimplimit="0.15">
+            <joint joint="robot0:FFJ2" coef="0.003996"></joint>
+            <joint joint="robot0:FFJ0" coef="0.005806"></joint>
+        </fixed>
+        <fixed name="robot0:T_FFJ2d" limited="true" range="-0.03 0.007" solreflimit="0.15" solimplimit="0.15">
+            <joint joint="robot0:FFJ2" coef="-0.003996"></joint>
+            <joint joint="robot0:FFJ0" coef="-0.005806"></joint>
+        </fixed>
+        <fixed name="robot0:T_FFJ1c" limited="true" range="-0.001 0.001" solreflimit="0.15" solimplimit="0.15">
+            <joint joint="robot0:FFJ2" coef="0.007094"></joint>
+            <joint joint="robot0:FFJ1" coef="-0.005806"></joint>
+        </fixed>
+        <fixed name="robot0:T_FFJ1u" limited="true" range="-0.007 0.03" solreflimit="0.15" solimplimit="0.15">
+            <joint joint="robot0:FFJ2" coef="0.007094"></joint>
+            <joint joint="robot0:FFJ1" coef="0.005806"></joint>
+        </fixed>
+        <fixed name="robot0:T_FFJ1d" limited="true" range="-0.03 0.007" solreflimit="0.15" solimplimit="0.15">
+            <joint joint="robot0:FFJ2" coef="-0.007094"></joint>
+            <joint joint="robot0:FFJ1" coef="-0.005806"></joint>
+        </fixed>
+        <fixed name="robot0:T_MFJ2c" limited="true" range="-0.001 0.001" solreflimit="0.15" solimplimit="0.15">
+            <joint joint="robot0:MFJ2" coef="0.003996"></joint>
+            <joint joint="robot0:MFJ0" coef="-0.005806"></joint>
+        </fixed>
+        <fixed name="robot0:T_MFJ2u" limited="true" range="-0.007 0.03" solreflimit="0.15" solimplimit="0.15">
+            <joint joint="robot0:MFJ2" coef="0.003996"></joint>
+            <joint joint="robot0:MFJ0" coef="0.005806"></joint>
+        </fixed>
+        <fixed name="robot0:T_MFJ2d" limited="true" range="-0.03 0.007" solreflimit="0.15" solimplimit="0.15">
+            <joint joint="robot0:MFJ2" coef="-0.003996"></joint>
+            <joint joint="robot0:MFJ0" coef="-0.005806"></joint>
+        </fixed>
+        <fixed name="robot0:T_MFJ1c" limited="true" range="-0.001 0.001" solreflimit="0.15" solimplimit="0.15">
+            <joint joint="robot0:MFJ2" coef="0.007094"></joint>
+            <joint joint="robot0:MFJ1" coef="-0.005806"></joint>
+        </fixed>
+        <fixed name="robot0:T_MFJ1u" limited="true" range="-0.007 0.03" solreflimit="0.15" solimplimit="0.15">
+            <joint joint="robot0:MFJ2" coef="0.007094"></joint>
+            <joint joint="robot0:MFJ1" coef="0.005806"></joint>
+        </fixed>
+        <fixed name="robot0:T_MFJ1d" limited="true" range="-0.03 0.007" solreflimit="0.15" solimplimit="0.15">
+            <joint joint="robot0:MFJ2" coef="-0.007094"></joint>
+            <joint joint="robot0:MFJ1" coef="-0.005806"></joint>
+        </fixed>
+
+
+        <fixed name="robot0:T_RFJ2c" limited="true" range="-0.001 0.001" solreflimit="0.15" solimplimit="0.15">
+            <joint joint="robot0:RFJ2" coef="0.003996"></joint>
+            <joint joint="robot0:RFJ0" coef="-0.005806"></joint>
+        </fixed>
+        <fixed name="robot0:T_RFJ2u" limited="true" range="-0.007 0.03" solreflimit="0.15" solimplimit="0.15">
+            <joint joint="robot0:RFJ2" coef="0.003996"></joint>
+            <joint joint="robot0:RFJ0" coef="0.005806"></joint>
+        </fixed>
+        <fixed name="robot0:T_RFJ2d" limited="true" range="-0.03 0.007" solreflimit="0.15" solimplimit="0.15">
+            <joint joint="robot0:RFJ2" coef="-0.003996"></joint>
+            <joint joint="robot0:RFJ0" coef="-0.005806"></joint>
+        </fixed>
+        <fixed name="robot0:T_RFJ1c" limited="true" range="-0.001 0.001" solreflimit="0.15" solimplimit="0.15">
+            <joint joint="robot0:RFJ2" coef="0.007094"></joint>
+            <joint joint="robot0:RFJ1" coef="-0.005806"></joint>
+        </fixed>
+        <fixed name="robot0:T_RFJ1u" limited="true" range="-0.007 0.03" solreflimit="0.15" solimplimit="0.15">
+            <joint joint="robot0:RFJ2" coef="0.007094"></joint>
+            <joint joint="robot0:RFJ1" coef="0.005806"></joint>
+        </fixed>
+        <fixed name="robot0:T_RFJ1d" limited="true" range="-0.03 0.007" solreflimit="0.15" solimplimit="0.15">
+            <joint joint="robot0:RFJ2" coef="-0.007094"></joint>
+            <joint joint="robot0:RFJ1" coef="-0.005806"></joint>
+        </fixed>
+
+        <fixed name="robot0:T_LFJ2c" limited="true" range="-0.001 0.001" solreflimit="0.15" solimplimit="0.15">
+            <joint joint="robot0:LFJ2" coef="0.003996"></joint>
+            <joint joint="robot0:LFJ0" coef="-0.005806"></joint>
+        </fixed>
+        <fixed name="robot0:T_LFJ2u" limited="true" range="-0.007 0.03" solreflimit="0.15" solimplimit="0.15">
+            <joint joint="robot0:LFJ2" coef="0.003996"></joint>
+            <joint joint="robot0:LFJ0" coef="0.005806"></joint>
+        </fixed>
+        <fixed name="robot0:T_LFJ2d" limited="true" range="-0.03 0.007" solreflimit="0.15" solimplimit="0.15">
+            <joint joint="robot0:LFJ2" coef="-0.003996"></joint>
+            <joint joint="robot0:LFJ0" coef="-0.005806"></joint>
+        </fixed>
+        <fixed name="robot0:T_LFJ1c" limited="true" range="-0.001 0.001" solreflimit="0.15" solimplimit="0.15">
+            <joint joint="robot0:LFJ2" coef="0.007094"></joint>
+            <joint joint="robot0:LFJ1" coef="-0.005806"></joint>
+        </fixed>
+        <fixed name="robot0:T_LFJ1u" limited="true" range="-0.007 0.03" solreflimit="0.15" solimplimit="0.15">
+            <joint joint="robot0:LFJ2" coef="0.007094"></joint>
+            <joint joint="robot0:LFJ1" coef="0.005806"></joint>
+        </fixed>
+        <fixed name="robot0:T_LFJ1d" limited="true" range="-0.03 0.007" solreflimit="0.15" solimplimit="0.15">
+            <joint joint="robot0:LFJ2" coef="-0.007094"></joint>
+            <joint joint="robot0:LFJ1" coef="-0.005806"></joint>
+        </fixed>
+
+        <fixed name="robot0:T_THJ2c" limited="true" range="-0.001 0.001" solreflimit="0.5" solimplimit="0.5">
+            <joint joint="robot0:THJ1" coef="0.006921"></joint>
+            <joint joint="robot0:THJ2" coef="-0.007218"></joint>
+        </fixed>
+        <fixed name="robot0:T_THJ2u" limited="true" range="-0.007 0.03" solreflimit="0.5" solimplimit="0.5">
+            <joint joint="robot0:THJ1" coef="0.006921"></joint>
+            <joint joint="robot0:THJ2" coef="0.007218"></joint>
+        </fixed>
+        <fixed name="robot0:T_THJ2d" limited="true" range="-0.03 0.007" solreflimit="0.5" solimplimit="0.5">
+            <joint joint="robot0:THJ1" coef="-0.006921"></joint>
+            <joint joint="robot0:THJ2" coef="-0.007218"></joint>
+        </fixed>
+    </tendon>
+
+    <!--ACTUATORS-->
+    <actuator>
+        <!--UR5-->
+        <!-- <position name='shoulder_pan' ctrllimited="true" ctrlrange="-3.14159 3.14159" joint='shoulder_pan_joint' kp="1000"/>
+        <position name='shoulder_lift' ctrllimited="true" ctrlrange="-3.14159 3.14159" joint='shoulder_lift_joint' kp="1000"/>
+        <position name='forearm' ctrllimited="true" ctrlrange="-3.14159 3.14159" joint='elbow_joint' kp="1000"/>
+        <position name='wrist_1' ctrllimited="true" ctrlrange="-3.14159 3.14159" joint='wrist_1_joint' kp="1000"/>
+        <position name='wrist_2' ctrllimited="true" ctrlrange="-3.14159 3.14159" joint='wrist_2_joint' kp="1000"/>
+        <position name='wrist_3' ctrllimited="true" ctrlrange="-3.14159 3.14159" joint='wrist_3_joint' kp="500"/> -->
+        <motor name='shoulder_pan_T' ctrllimited="true" ctrlrange="-2 2" joint='shoulder_pan_joint' gear="101"/>
+        <motor name='shoulder_lift_T' ctrllimited="true" ctrlrange="-2 2" joint='shoulder_lift_joint' gear="101"/>
+        <motor name='forearm_T' ctrllimited="true" ctrlrange="-2 2" joint='elbow_joint' gear="101" />
+        <motor name='wrist_1_T' ctrllimited="true" ctrlrange="-1 1" joint='wrist_1_joint' gear="101"/> 
+        <motor name='wrist_2_T' ctrllimited="true" ctrlrange="-1 1" joint='wrist_2_joint' gear="101"/>
+        <motor name='wrist_3_T' ctrllimited="true" ctrlrange="-1 1" joint='wrist_3_joint' gear="101"/>
+
+        <position name="robot0:A_FFJ2" class="robot0:asset_class" user="2002" joint="robot0:FFJ2" ctrlrange="0 1.571" kp="1" forcerange="-10 10"></position>
+        <position name="robot0:A_MFJ2" class="robot0:asset_class" user="2008" joint="robot0:MFJ2" ctrlrange="0 1.571" kp="1" forcerange="-10 10"></position>
+        <position name="robot0:A_RFJ2" class="robot0:asset_class" user="2014" joint="robot0:RFJ2" ctrlrange="0 1.571" kp="1" forcerange="-10 10"></position>
+        <position name="robot0:A_LFJ2" class="robot0:asset_class" user="2020" joint="robot0:LFJ2" ctrlrange="0 1.571" kp="1" forcerange="-10 10"></position>
+		<position name="robot0:A_THJ2" class="robot0:asset_class" user="2030" joint="robot0:THJ2" ctrlrange="0 1.571" kp="1" forcerange="-10 10"></position>
+		<position name="robot0:A_THJ3" class="robot0:asset_class" user="2032" joint="robot0:THJ3" ctrlrange="0 3.222" kp="1" forcerange="-3 3"></position>
+
+    </actuator>
+
+    <sensor>
+        <jointpos name="J1" joint="shoulder_pan_joint"/>
+        <jointpos name="J2" joint="shoulder_lift_joint"/>
+        <jointpos name="J3" joint="elbow_joint"/>
+        <jointpos name="J4" joint="wrist_1_joint"/>
+        <jointpos name="J5" joint="wrist_2_joint"/>
+        <jointpos name="J6" joint="wrist_3_joint"/>
+
+    </sensor>
+</mujoco>
