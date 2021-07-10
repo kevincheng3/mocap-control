@@ -24,3 +24,7 @@ By setting setting the mocap position and quaternion, you can compelting tcp con
 sim.data.set_mocap_pos("mocap", pos)
 self.sim.data.set_mocap_quat("mocap", quat)
 ```
+
+
+https://user-images.githubusercontent.com/43990826/125153588-581c0d00-e187-11eb-9f8b-c058a24e3ed5.mp4
+
