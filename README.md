@@ -24,14 +24,19 @@ By setting setting the mocap position and quaternion, you can compelting tcp con
 sim.data.set_mocap_pos("mocap", pos)
 self.sim.data.set_mocap_quat("mocap", quat)
 ```
-"Go up/down/left/right",     "[up]/[down]/[left]/[right] arrow", \\
+
+```c
+
+"Go up/down/left/right",     "[up]/[down]/[left]/[right] arrow",
 "Go forwarf/backward",       "[F]/[B]"
 "ROT_X",                     "[Q]/[W]"
 "ROT_Y",                     "[A]/[S]"
 "ROT_Z",                     "[Z]/[X]"
 "Slow down/Speed up",        "[-]/[=]"
+```
 
-https://user-images.githubusercontent.com/43990826/125153588-581c0d00-e187-11eb-9f8b-c058a24e3ed5.mp4
+![videos](https://user-images.githubusercontent.com/43990826/125153758-8fd78480-e188-11eb-9871-388e9073612d.gif)
+
 
 
             
