@@ -9,7 +9,7 @@ creating a mocap body:
         <geom conaffinity="0" contype="0" pos="0 1 0" rgba="0 1 0 0.1" size="0.005 1 0.001" type="box"></geom>
         <geom conaffinity="0" contype="0" pos="0 0 1" rgba="0 0 1 0.1" size="0.005 0.005 1" type="box"></geom> -->
     </body>
-```
+```c
 
 fixing it to the end point of the robotic arm:
 
@@ -20,6 +20,7 @@ fixing it to the end point of the robotic arm:
 ```
 
 By setting setting the mocap position and quaternion, you can compelting tcp control
-
+```c
 sim.data.set_mocap_pos("mocap", pos)
 self.sim.data.set_mocap_quat("mocap", quat)
+```
